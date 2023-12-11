@@ -24,7 +24,6 @@ export function fetchBreeds() {
   const url = 'https://api.thecatapi.com/v1/breeds';
   const api_key =
     'live_CyIt46k5XXDF4CTRz4nbFjJVgzCAvMjg8oVWL8KZaKNtdiYNz2FSbLVVVYPhK1dp';
-
   showLoader();
 
   return fetch(url, {
