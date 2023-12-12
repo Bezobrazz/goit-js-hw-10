@@ -24,31 +24,24 @@ function showError() {
   error.style.display = 'block';
 }
 
+function generateBreedOptions(data) {
+  return data.map(breed => {
+    const option = document.createElement('option');
+    option.value = breed.id;
+    option.textContent = breed.name;
+    return option;
+  });
+}
+
 fetchBreeds()
   .then(data => {
     showCatInfo();
-    return data.map(breed => ({
-      id: breed.id,
-      name: breed.name,
-    }));
+    const breedOptions = generateBreedOptions(data);
+    breedSelect.append(...breedOptions);
   })
   .catch(error => {
     showError();
     console.error(error);
-    throw error;
-  })
-  .then(breeds => {
-    const breedOptions = breeds.map(breed => {
-      const option = document.createElement('option');
-      option.value = breed.id;
-      option.textContent = breed.name;
-      return option;
-    });
-
-    breedSelect.append(...breedOptions);
-  })
-  .catch(error => {
-    console.error('Error fetching breeds:', error);
   })
   .finally(() => {
     hideLoader();
@@ -56,27 +49,18 @@ fetchBreeds()
 
 breedSelect.addEventListener('change', onBreedSelectChange);
 
-function onBreedSelectChange() {
-  const selectedBreedId = breedSelect.value;
-
-  if (selectedBreedId) {
-    fetchCatByBreed(selectedBreedId)
-      .then(data => {
-        showCatInfo();
-        return data[0];
-      })
-      .then(catData => {
-        catInfoDiv.innerHTML = createCatMarkup(catData);
-      })
-      .catch(error => {
-        showError();
-        console.error('Error fetching cat data:', error);
-        throw error;
-      })
-      .finally(() => {
-        hideLoader();
-      });
-  } else {
-    catInfoDiv.innerHTML = '';
-  }
+function onBreedSelectChange(e) {
+  fetchCatByBreed(e.target.value)
+    .then(data => {
+      showCatInfo();
+      catInfoDiv.innerHTML = createCatMarkup(data[0]);
+    })
+    .catch(error => {
+      showError();
+      console.error('Error fetching cat data:', error);
+      throw error;
+    })
+    .finally(() => {
+      hideLoader();
+    });
 }
