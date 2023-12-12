@@ -1,24 +1,4 @@
-const loader = document.querySelector('.loader');
-const catInfoDiv = document.querySelector('.cat-card');
-const error = document.querySelector('.error');
-
-function showLoader() {
-  loader.style.display = 'block';
-  catInfoDiv.style.display = 'none';
-  error.style.display = 'none';
-}
-
-function hideLoader() {
-  loader.style.display = 'none';
-}
-
-function showCatInfo() {
-  catInfoDiv.style.display = 'block';
-}
-
-function showError() {
-  error.style.display = 'block';
-}
+import { showLoader } from './index.js';
 
 export function fetchBreeds() {
   const url = 'https://api.thecatapi.com/v1/breeds';
@@ -30,27 +10,12 @@ export function fetchBreeds() {
     headers: {
       'x-api-key': api_key,
     },
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      hideLoader();
-      showCatInfo();
-      return data.map(breed => ({
-        id: breed.id,
-        name: breed.name,
-      }));
-    })
-    .catch(error => {
-      hideLoader();
-      showError();
-      console.error(error);
-      throw error;
-    });
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  });
 }
 
 export function fetchCatByBreed(breedId) {
@@ -68,22 +33,10 @@ export function fetchCatByBreed(breedId) {
     headers: {
       'x-api-key': api_key,
     },
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      hideLoader();
-      showCatInfo();
-      return data[0];
-    })
-    .catch(error => {
-      hideLoader();
-      showError();
-      console.error('Error fetching cat data:', error);
-      throw error;
-    });
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  });
 }
